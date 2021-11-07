@@ -1,7 +1,7 @@
 const Product = require('../models/Products')
 const Cart = require('../models/Cart')
 const Staff = require('../models/Staff')
-const { multipleMongooseToObject } = require('../../util/mongoose')
+const { multipleMongooseToObject, mongooseToObject } = require('../../util/mongoose')
 
 class SiteController {
     
@@ -55,6 +55,37 @@ class SiteController {
         
     }
 
+    // [GET] /detail/:ID
+    detail(req, res, next) {
+        Product.findOne({ ID: req.params.ID})
+            .then((product) => {
+                res.render('detail', { 
+                    layout: false,
+                    products: mongooseToObject(product) 
+                })
+            })
+            .catch(next)
+    }
+
+    // [GET] /reduce/:id
+    reduce(req, res, next) {
+        var productId = req.params.id;
+        var cart = new Cart(req.session.cart ? req.session.cart : {});
+
+        cart.reduceByOne(productId);
+        req.session.cart = cart;
+        res.redirect('/shopping-cart')
+    }
+
+    // [GET] /remove/:id
+    remove(req, res, next) {
+        var productId = req.params.id;
+        var cart = new Cart(req.session.cart ? req.session.cart : {});
+
+        cart.removeItem(productId);
+        req.session.cart = cart;
+        res.redirect('/shopping-cart')
+    }
    
 }
 

@@ -3,6 +3,15 @@ const router = express.Router()
 
 const siteController = require('../app/controllers/SiteControllers')
 
+// siteController.remove
+router.get('/remove/:id', siteController.remove)
+
+// siteController.reduce
+router.get('/reduce/:id', siteController.reduce)
+
+// siteController.detail
+router.get('/detail/:ID', siteController.detail)
+
 // siteController.staff
 router.get('/admin/manage-staff', siteController.staff)
 
