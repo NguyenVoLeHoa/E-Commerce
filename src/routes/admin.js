@@ -3,6 +3,9 @@ const router = express.Router()
 
 const adminController = require('../app/controllers/AdminControllers')
 
+// adminController.destroyBill
+router.delete('/:id', adminController.destroyBill)
+
 // adminController.destroyStaff
 router.delete('/manage-staff/:id', adminController.destroyStaff)
 

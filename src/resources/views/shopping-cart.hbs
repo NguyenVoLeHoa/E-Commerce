@@ -68,13 +68,7 @@
 					<ul class="list-group-item">
 						<span class="font-weight-bold"><bold>{{this.item.name}}</bold></span>
 						<span class="badge bg-success">${{this.price}}</span>
-						{{!-- <div class="btn-group">
-							<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">Action <span class="caret"></span></button>
-							<ul class="dropdown-menu">
-								<li><a class="dropdown-item" href="#">Reduce by 1</a></li>
-								<li><a class="dropdown-item" href="#">Remove All</a></li>
-							</ul>
-						</div> --}}
+				
 						<div class="btn-group">
 							<button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
 								Action
@@ -94,15 +88,42 @@
 
 		<div class="row margin-top-item">
 			<div class="col-sm-6 col-md-6 col-md-offset-3 col-sm-offset-3">
-				<h5>Total: {{totalPrice}} </h5>
+				<h5>Total: ${{totalPrice}} </h5>
 			</div>
 		</div>
 		<hr>
-		<div class="row">
-			<div class="col-sm-6 col-md-6 col-md-offset-3 col-sm-offset-3">
-				<button type="button" class="btn btn-success">Checkout</button>
+		<form method="POST" action="/shopping-cart/store-bill">
+		   <input type="hidden" class="form-control" id="inputAddress2" name="total" value="{{totalPrice}}">
+			<div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">ID</label>
+                <input type="text" class="form-control" id="inputAddress2" placeholder="HDxxx" name="ID">
+        	</div>
+			<div class="mb-3">
+                <label for="exampleInputPassword1" class="form-label">Salesman</label>
+                <select class="form-select" aria-label="Default select example" name="salesman">
+
+                    {{#each staff}}
+                    <option>{{this.name}}</option>
+					{{/each}}
+                                           
+                </select>
+            </div>
+			<div class="mb-3">
+                <label for="exampleInputPassword1" class="form-label">Department</label>
+                <select class="form-select" aria-label="Default select example" name="department">
+
+                    {{#each depart}}
+                    <option>{{this.department}}</option>
+                    {{/each}}
+                                           
+                </select>
+            </div>
+			<div class="row">
+				<div class="col-sm-6 col-md-6 col-md-offset-3 col-sm-offset-3">
+					<button type="submit" class="btn btn-success">Save Bill</button>
+				</div>
 			</div>
-		</div>
+		</form>
 		{{ else}}
 		<div class="row margin-top-item">
 			<div class="col-sm-6 col-md-6 col-md-offset-3 col-sm-offset-3">

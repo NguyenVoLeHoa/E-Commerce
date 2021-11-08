@@ -3,6 +3,9 @@ const router = express.Router()
 
 const siteController = require('../app/controllers/SiteControllers')
 
+// siteController.storeBill
+router.post('/shopping-cart/store-bill', siteController.storeBill)
+
 // siteController.remove
 router.get('/remove/:id', siteController.remove)
 

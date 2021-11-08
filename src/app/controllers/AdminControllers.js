@@ -2,13 +2,28 @@ const { multipleMongooseToObject, mongooseToObject } = require('../../util/mongo
 const Product = require('../models/Products')
 const Staff = require('../models/Staff')
 const Depart = require('../models/Depart')
+const Bill = require('../models/Bill')
 const async = require('async');
 
 class AdminController {
     
-    // [GET] / 
-    index(re, res, next) {
-        res.render('dashboard', {layout: 'admin'})
+    // [GET] /admin 
+    index(req, res, next) {
+        Bill.find({})
+            .then(bill => {
+                res.render('dashboard', {
+                    layout: 'admin',
+                    bill: multipleMongooseToObject(bill)
+                })
+            })
+        
+    }
+
+    // [DELETE] /admin/:id
+    destroyBill(req, res, next) {
+        Bill.deleteOne({_id: req.params.id})
+            .then(() => res.redirect('back'))
+            .catch(next)
     }
 
     // [GET] /admin/add-products
@@ -61,7 +76,7 @@ class AdminController {
         const staff = new Staff(formData);
         staff.save()
             .then(() => res.redirect('/admin/manage-staff'))
-            .catch(err => {
+            .catch(error => {
                 console.log(`Insert staff data failed`);
             })
     }
@@ -191,6 +206,8 @@ class AdminController {
             .then(() => res.redirect('back'))
             .catch(next)
     }
+
+
 }
 
 module.exports = new AdminController;
