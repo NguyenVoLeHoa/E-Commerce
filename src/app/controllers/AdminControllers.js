@@ -2,6 +2,8 @@ const { multipleMongooseToObject, mongooseToObject } = require('../../util/mongo
 const Product = require('../models/Products')
 const Staff = require('../models/Staff')
 const Depart = require('../models/Depart')
+const async = require('async');
+
 class AdminController {
     
     // [GET] / 
@@ -88,12 +90,40 @@ class AdminController {
 
     // [GET] /admin/manage-staff/:id/edit
     editStaff(req, res, next) {
-        Staff.findById(req.params.id)
-            .then(staff => res.render('edit-staff', {
+        var locals = {};
+        async.parallel([
+
+            //Load staff data 
+            function(callback) {
+                 Staff.findById(req.params.id,function(err,staff){
+                    if (err) return callback(err);
+                    staff ? locals.staff = staff.toObject() : staff;
+                    callback();
+                });
+            },
+            //Load depart data using 
+            function(callback) {
+                   Depart.find({},function(err,depart){
+                   if (err) return callback(err);
+                    locals.depart = depart.map(mongoose => mongoose.toObject());
+                    callback();
+                });
+            }
+        ], function(err) { //This function gets called after the two tasks have called their "task callbacks"
+            if (err) return next(err); //If an error occurred, we let express handle it by calling the `next` function
+            
+            //Here `locals` will be an object with `user` and `posts` keys
+            //Example: `locals = {user: ..., posts: [...]}`
+    
+    
+            res.render('edit-staff', {
                 layout: 'admin',
-                staff: mongooseToObject(staff)
-            }))
-            .catch(next);
+                staff: locals.staff,
+                depart: locals.depart
+            })
+        });
+    
+
         
         
     }
